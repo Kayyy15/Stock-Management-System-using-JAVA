@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus | Executive Inventory</title>
+    <!-- Premium Google Fonts: Playfair Display for Headers, Montserrat for UI/Data -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Login Gate -->
+    <div id="login-screen" class="screen active">
+        <div class="login-card">
+            <h2>NEXUS <span class="accent">SYS</span></h2>
+            <p>Secure Executive Access</p>
+            <input type="text" id="username" placeholder="Username (admin or staff)">
+            <input type="password" id="password" placeholder="Password (123)">
+            <button onclick="login()">Authenticate</button>
+            <p id="login-error" class="error hidden">Invalid credentials.</p>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app-screen" class="screen hidden">
+        <aside class="sidebar">
+            <h2 class="logo">NEXUS<span class="accent">.</span></h2>
+            <div class="user-info">Logged in as: <span id="current-user" class="accent"></span></div>
+            <nav>
+                <button onclick="switchTab('dashboard')">Dashboard</button>
+                <button onclick="switchTab('inventory')">Inventory</button>
+                <button onclick="switchTab('audit')">Audit Log</button>
+                <button onclick="switchTab('suppliers')">Suppliers</button>
+            </nav>
+            <button class="logout-btn" onclick="logout()">Log Out</button>
+        </aside>
+
+        <main class="content">
+            <!-- Dashboard -->
+            <section id="dashboard" class="tab active">
+                <header>
+                    <h1>Live Analytics</h1>
+                    <input type="text" id="global-search" placeholder="Search inventory..." onkeyup="handleSearch()">
+                </header>
+                <div class="stats-grid">
+                    <div class="stat-card"><h3>Total Valuation</h3><p id="stat-val">₹0</p></div>
+                    <div class="stat-card"><h3>Total Products</h3><p id="stat-prod">0</p></div>
+                    <div class="stat-card"><h3>Out of Stock</h3><p id="stat-out">0</p></div>
+                    <div class="stat-card alert-card"><h3>Low Stock Alerts</h3><p id="stat-low">0</p></div>
+                </div>
+                <div class="low-stock-widget">
+                    <h3>Critical Reorder Alerts</h3>
+                    <ul id="low-stock-list"></ul>
+                </div>
+            </section>
+
+            <!-- Inventory -->
+            <section id="inventory" class="tab hidden">
+                <header>
+                    <h1>Product Inventory</h1>
+                    <button id="add-item-btn" class="admin-only hidden" onclick="alert('Add Item modal goes here')">+ New Product</button>
+                </header>
+                <table id="inventory-table">
+                    <thead>
+                        <tr>
+                            <th>SKU</th><th>Name</th><th>Category</th><th>Cost (₹)</th><th>Price (₹)</th><th>Stock</th><th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-body"></tbody>
+                </table>
+            </section>
+
+            <!-- Audit Trail -->
+            <section id="audit" class="tab hidden">
+                <header><h1>Audit Trail</h1></header>
+                <table id="audit-table">
+                    <thead>
+                        <tr><th>Timestamp</th><th>SKU</th><th>Change</th><th>User</th><th>Reason</th></tr>
+                    </thead>
+                    <tbody id="audit-body"></tbody>
+                </table>
+            </section>
+
+            <!-- Suppliers -->
+            <section id="suppliers" class="tab hidden">
+                <header><h1>Supplier Rolodex</h1></header>
+                <div class="supplier-grid" id="supplier-grid"></div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Stock Modal -->
+    <div id="stock-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3 id="modal-title">Adjust Stock</h3>
+            <input type="number" id="stock-qty" placeholder="Quantity">
+            <input type="text" id="stock-reason" placeholder="Reason (e.g. Sold, Shipment)">
+            <div class="modal-actions">
+                <button class="btn-in" onclick="confirmStock(true)">Stock IN (+)</button>
+                <button class="btn-out" onclick="confirmStock(false)">Stock OUT (-)</button>
+                <button class="btn-close" onclick="closeModal()">Cancel</button>
+            </div>
+            <p id="modal-error" class="error hidden">Cannot drop below zero!</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
